@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
     
     <style>
-        :root {
+        :root {z
             --sky-blue: #4db8ff; --sunny-yellow: #ffdb4d; --grass-green: #5cd65c;
             --soft-white: #ffffff; --text-navy: #003366; --magic-purple: #a29bfe;
             --lava-orange: #ff7f50; --locked-gray: #dfe6e9;
@@ -90,21 +90,22 @@
 
         /* COMPACT ANSWER OPTIONS - FITS PERFECTLY ON FLASHCARD */
         .answer-option {
-   	 background: white;
-    	border: 2px solid var(--sky-blue);
-    	padding: 8px 11px;
-    	border-radius: 25px;
-    	font-size: 1.3rem;
-    	color: var(--sky-blue);
-    	box-shadow: 0 8px 0 var(--sky-blue);
-    	margin: 8px 6px;
-    	min-width: 150px;
-    	max-width: 300px; /* Limit width for wrapping */
-    	text-align: center;
-    	white-space: normal; /* Allow wrapping */
-    	overflow-wrap: break-word; /* Break long words if needed */
-    	line-height: 1.4;
-	}
+            background: white;
+            border: 2px solid var(--sky-blue);
+            padding: 4px 11px; /* Reduced vertical padding from 8px to 4px */
+            border-radius: 20px;
+            font-family: 'Fredoka One';
+            font-size: 1.2rem; /* Slightly smaller font to ensure fit */
+            color: var(--sky-blue);
+            box-shadow: 0 6px 0 var(--sky-blue); /* Slightly smaller shadow */
+            margin: 5px 6px;
+            min-width: 280px; /* Increased width from 150px to 280px */
+            max-width: 400px;
+            text-align: center;
+            white-space: normal;
+            overflow-wrap: break-word;
+            line-height: 1.2;
+        }
       
         .answer-option:hover:not(:disabled) {
             transform: translateY(-2px); box-shadow: 0 10px 0 var(--sky-blue);
@@ -172,7 +173,7 @@
         #webcam-container { width: 448px; height: 448px; background: #000; border-radius: 30px; border: 10px solid #333; overflow: hidden; }
         
         .ai-info-box { 
-            width: 448px; height: 448px; background: #f9f9f9; 
+            width: 350px; height: 250px; background: #f9f9f9; 
             border-radius: 30px; border: 10px solid var(--sky-blue); 
             display: flex; flex-direction: column; align-items: center; 
             justify-content: center; overflow: hidden; position: relative; 
@@ -249,15 +250,15 @@
             gap: 20px; padding: 20px; width: 100%;
         }
         .answer-options {
-  	display: flex;
-  	flex-direction: column; /* Change from wrap to column for vertical layout */
-  	align-items: center;    /* Center buttons horizontally */
-  	justify-content: center;
-  	gap: 0.5px;              /* Space between buttons */
-  	width: 100%;
-  	max-width: 700px;       /* Optional: limit width for better look */
-  	padding: 5px;
-	}
+            display: flex;
+            flex-direction: column; 
+            align-items: center;    
+            justify-content: center;
+            gap: 2px; /* Tightened gap to save vertical space */
+            width: 100%;
+            max-width: 700px;       
+            padding: 5px;
+        }
         .btn-lets-go { background: var(--grass-green); color: white; font-size: 3.5rem; padding: 25px 80px; border-radius: 40px; box-shadow: 0 12px 0 #3d8b3d; }
 
         #disclaimerOverlay {
@@ -381,8 +382,8 @@
                 <div class="ai-info-box">
                     <div style="font-family: 'Fredoka One'; font-size: 1.8rem; color: var(--text-navy); text-align: center; padding: 20px;">
                         <div id="aiStatus" style="font-size: 2.5rem; margin-bottom: 15px;">READY</div>
-                        <div id="aiPrediction" style="font-size: 1.4rem; color: var(--sky-blue);">Waiting for clear sign...</div>
-                        <div id="aiConfidence" style="font-size: 1rem; color: #666; margin-top: 10px;">Confidence: 0%</div>
+                        <div id="aiPrediction" style="font-size: 1.5rem; color: var(--sky-blue);">Waiting for clear sign...</div>
+                        <div id="aiConfidence" style="font-size: 1.2rem; color: #666; margin-top: 10px;">Confidence: 0%</div>
                     </div>
                 </div>
             </div>

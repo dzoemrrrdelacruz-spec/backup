@@ -408,16 +408,17 @@
             </div>
             
             <div class="video-grid">
-                <div class="level-video-section">
-                    <div class="level-video-box">
-                        <video id="videoPlayer" controls preload="metadata" style="width:100%; height:100%;" muted="false"></video>
-                        <div class="video-loading" id="videoLoadingModule" style="display: none;">Loading Video...</div>
-                        <div class="video-controls" id="videoControls" style="display: none;">
-                            <div class="current-lesson-info" id="currentLessonInfo"></div>
-                            <button class="btn-next-video" id="nextVideoBtn" onclick="playNextVideo()">NEXT</button>
-                        </div>
-                    </div>
-                </div>
+               <div class="level-video-section">
+    <div class="level-video-box">
+        <div id="videoLoading" class="video-loading" style="display:none;">MAGIC LOADING...</div>
+        <video id="videoPlayer" width="100%" height="100%" onplay="hideLoading()" onwaiting="showLoading()"></video>
+    </div>
+    
+    <div class="video-controls" id="videoControls" style="display: none;">
+        <div class="current-lesson-info" id="currentLessonInfo">LESSON 1</div>
+        <button class="btn-next-video" id="nextVideoBtn" onclick="playNextVideo()">NEXT LESSON ➔</button>
+    </div>
+</div>
                 
                 <div class="video-list-section">
                     <div id="videoList" class="video-list"></div>
@@ -635,25 +636,43 @@
     }
 
     async function playLessonVideo(lessonNum) {
+        state.currentLessonIndex = lessonNum;
         const folder = DATA[state.level].folder;
         const videoPlayer = document.getElementById("videoPlayer");
         
+        // FIX: Ensuring the filename strictly follows "module[m]_video[n].mp4"
         const videoSrc = `videos/${folder}/module${state.currentModule}_video${lessonNum}.mp4`;
         
-        // Update video list
+        // Update the Sidebar UI
         document.querySelectorAll('.video-list-item').forEach(item => item.classList.remove('active'));
-        document.getElementById(`vs-${lessonNum}`).parentElement.classList.add('active');
-        document.getElementById(`vs-${lessonNum}`).innerText = "PLAYING";
+        const statusSpan = document.getElementById(`vs-${lessonNum}`);
+        if (statusSpan) {
+            statusSpan.parentElement.classList.add('active');
+            statusSpan.innerText = "PLAYING";
+        }
         
         state.watchedItems.add(lessonNum);
         
-        document.getElementById('currentLessonInfo').innerText = `Lesson ${lessonNum}/${DATA[state.level].videoCounts[state.currentModule]}`;
-        state.currentLessonIndex = lessonNum;
+        // Update Header/Label Info
+        const infoLabel = document.getElementById('currentLessonInfo');
+        if (infoLabel) {
+            infoLabel.innerText = `Lesson ${lessonNum}/${DATA[state.level].videoCounts[state.currentModule]}`;
+        }
         
-        document.getElementById('videoControls').style.display = 'none';
+        // Load and Play the video
+        videoPlayer.src = videoSrc;
+        videoPlayer.load(); // CRITICAL: Forces the browser to load the new source
         
-        loadVideo(videoPlayer, videoSrc, 'videoLoadingModule');
-        videoPlayer.onended = handleVideoEnd;
+        videoPlayer.play().catch(error => {
+            console.log("Autoplay blocked. User must click play.", error);
+        });
+
+        // Setup the end-of-video behavior
+        videoPlayer.onended = () => {
+            const nextBtnArea = document.getElementById('videoControls');
+            if (nextBtnArea) nextBtnArea.style.display = 'flex';
+            updateNextButtonState();
+        };
         
         checkQuizUnlock();
     }
@@ -946,16 +965,16 @@ function handleAnswer(isCorrect, selectedAnswer, correctAnswer) {
         const confidencePercent = Math.round(avgConfidence * 100);
 
         if (avgConfidence >= 0.75) {
-            statusDisplay.innerText = "MATCH FOUND";
+            statusDisplay.innerText = "CORRECT";
             statusDisplay.style.color = "var(--grass-green)";
-            aiStatus.innerText = "MATCH";
+            aiStatus.innerText = "CORRECT";
             aiStatus.style.color = "var(--grass-green)";
             aiPrediction.innerText = best.className.toUpperCase();
             aiConfidence.innerText = `Confidence: ${confidencePercent}%`;
         } else {
-            statusDisplay.innerText = "SCANNING";
+            statusDisplay.innerText = "TRY AGAIN";
             statusDisplay.style.color = "var(--text-navy)";
-            aiStatus.innerText = "SCAN";
+            aiStatus.innerText = "TRY AGAIN!";
             aiStatus.style.color = "var(--text-navy)";
             aiPrediction.innerText = "Clear sign needed";
             aiConfidence.innerText = `Confidence: ${confidencePercent}%`;
